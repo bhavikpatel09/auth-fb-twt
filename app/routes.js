@@ -1,5 +1,7 @@
 // app/routes.js
-module.exports = function (app, passport) {
+
+
+module.exports = function (app, passport, nodemailer) {
 
 	// =====================================
 	// HOME PAGE (with login links) ========
@@ -12,10 +14,62 @@ module.exports = function (app, passport) {
 	// LOGIN ===============================
 	// =====================================
 	// show the login form
-	app.get('/login', function (req, res) {
+	app.get('/sendmail', function (req, res, next) {
+		app.mailer.send('email', {
+		  to: 'bhavik.patel@radixweb.com', // REQUIRED. This can be a comma delimited string just like a normal email to field.  
+		  subject: 'Test Email', // REQUIRED. 
+		  otherProperty: 'Other Property' // All additional properties are also passed to the template as local variables. 
+		}, function (err) {
+		  if (err) {
+			// handle error 
+			console.log(err);
+			res.send('There was an error sending the email');
+			return;
+		  }
+		  res.send('Email Sent');
+		});
+	  });
+
+
+	app.get('/mail', function (req, res) {
 
 		// render the page and pass in any flash data if it exists
-		res.render('login.ejs', { message: req.flash('loginMessage') });
+		//res.render('login.ejs', { message: req.flash('loginMessage') });
+
+		try {
+			console.log("In Mail");
+			const transporter = nodemailer.createTransport({
+				//service: 'gmail',
+				auth: {
+					user: 'dotnet@mailtest.radixweb.net',
+					pass: 'deep70'
+				}
+			});
+			//console.log("transporter : " + transporter);
+
+			const mailOptions = {
+				from: 'dotnet@mailtest.radixweb.net',
+				to: 'bhavik.patel@radixweb.com',
+				subject: 'New Generated Password for User',
+				text: `Dear User,
+               This is your newly generated password from system.`
+			};
+			console.log('mailOptions: ' + mailOptions);
+
+			transporter.sendMail({
+				from: mailOptions.from,
+				to: mailOptions.to,
+				subject: mailOptions.subject,
+				html: mailOptions.text
+			}, function(err){
+				if(err)
+					console.log("Error in mail send: "+ err);
+			});
+			res.status(200).json({ message: 'Password has been sent.' });
+
+		} catch (error) {
+			console.log('error: ' + error);
+		}
 	});
 
 	// process the login form
@@ -85,6 +139,7 @@ module.exports = function (app, passport) {
 		req.logout();
 		res.redirect('/');
 	});
+
 };
 
 // route middleware to make sure
