@@ -11,17 +11,17 @@ var flash = require('connect-flash');
 var nodemailer = require('nodemailer');
 mailer = require('express-mailer');
 
-mailer.extend(app, {
- from: 'testdotnet@mailtest.radixweb.net',
- host: '192.168.100.101', // hostname 
- secureConnection: false, // use SSL 
- port: 25, // port for secure SMTP 
- transportMethod: 'SMTP', // default is SMTP. Accepts anything that nodemailer accepts 
- auth: {
-   user: 'testdotnet@mailtest.radixweb.net',
-   pass: 'deep70'
- }
-});
+// mailer.extend(app, {
+//  from: 'testdotnet@mailtest.radixweb.net',
+//  host: '192.168.100.101', // hostname 
+//  secureConnection: false, // use SSL 
+//  port: 25, // port for secure SMTP 
+//  transportMethod: 'SMTP', // default is SMTP. Accepts anything that nodemailer accepts 
+//  auth: {
+//    user: 'testdotnet@mailtest.radixweb.net',
+//    pass: 'deep70'
+//  }
+// });
 
 var configDB = require('./config/database.js');
 
